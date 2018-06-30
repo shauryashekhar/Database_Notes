@@ -1,0 +1,130 @@
+Clustered Tables - two tables share the same resource space.
+Real Application Clusters
+
+Database should have just one instance (structure and functions) mapped in the memory.
+
+User Tables - tables created/ maintained/ information entered by users
+
+Data Dictionary Tables - created by DBMS automatically - information not entered by user - maintained and created by sys and system (root user of DBMS).
+ex: User_Table, v$database, dba_xyz, etc.
+
+v$ - dynamic performance view - value changes depending on time of acccess
+dba_tables - static - values od not change until we change them.
+
+select * from tab -> shows the tables in the database
+
+Number and integer datatypes both store number and integer.
+Integer will take less memory space than numbers.
+
+If parameter is not passed to number, it sets aside a large slot of memory.
+
+When copying a table, primary keys are not copied, remaining constraints such as not null are copied, remaining all structure and data is copied.
+
+
+If you just want to copy table structure, command is: -
+	> create table wissen_nodata as select * from employees where 2=4;
+
+
+Putting brackets in alter statement allows you to modify multiple columns in one statement;
+
+
+When modifying size of the column, we can only modify the length to the length of maximum vale in that column.
+
+Use SET UNUSED to set some columns as unused and to drop them altogether later.
+
+We cannot rollback this option, as the ALTER command is a DDL command.
+
+
+
+
+
+desc recyclebin; - metadata table
+
+flashback table wissen to before drop; - to retrieve dropped tables;
+
+drop table wissen1 purge; - to completely drop a table with no scope of retreival
+
+rename ____ to _____ - to rename tables
+
+
+Three types of files:-
+1. Data File
+2. Control File (details of commits are logged here)
+3. Log files 
+
+(EXPLICIT) Lock on Row:
+-> implemented by default.
+-> only one update will get executed on that row by default.
+-> the other update will get executed only after commit.
+
+(IMPLICIT) Lock Table:-
+> lock table wissen in share mode; - locks table from getting written to or updated by other users, multiple users can acquire lock.
+
+> lock table wissen in exclusive mode, only one user can acquire this lock.
+
+
+Difference between share mode and exclusive mode:- share mode allows multiple users to acquire locks on the table, whereas the exclusive mode doesn't allow that, exclusive mode will allow only one user to acquire it.
+
+Both the locks prevent the second person from writing to the table, while it has been locked by the first user. Writing implies updation/ insertion/ deletion.
+
+Dual table is a dummy table which can be used for date operations and calculations - accessible to all users.
+
+DBA PRIVILEGES
+
+DO IN SYS AS SYSDBA
+
+Create user wissen identified by wissen; - create the user with password wissen and username wissen
+
+Grant session to wissen - allow to login
+
+Grant create table to wissen - allow to create table
+
+alter user wissen account lock; - to lock the user wissen;
+
+alter user wissen quota 2M on users; - allow memory allocation to user wissen/ edit memory allocation privileges of user wissen - also gives 2 MB of memory which the user can use for data storage. Will exceed soon.
+
+show parameter db_block; - shows the various blocks
+
+standard block size vs non-standard block size - oracle defined vs ability to user to define it. Grant user special permission to access this block size.
+
+PCT-FREE and PCT-Used
+
+ROLE (Importance): Collection of privileges and subsequent granting of role to users, which can collectively grant a large number of privileges to users in one go.
+
+Create Role - Grant privileges to role - grant role to users.
+
+> Create role role_name;
+> grant create table, create view to role_name;
+> grant role_name to user_name;
+
+> grant select on wissen to scott; -> Grant user permission to access another users tables can be granted by any user to another
+
+After granting:
+> select * from hr.wissen; - table name is of the form username.tablename
+
+For granting all privileges (that is equivalent to table owner): > grant all on table_name to user_name;
+
+> Grant update(col_name1, col_name2) on table_name to user_name: grant permissions to update only those columns to username.
+
+> Grant select on table_name to public: grant everyone the permissions on the table;
+
+> With Grant option : allows the user being given privileges to pass them on to other users;
+ex: grant select on wissen to wissen with grant option;
+
+Propogration of privileges by use of with grant option: grant select on hr.wissen to scott;
+
+CONSTRAINTS
+
+> select constraint_name from user_constraints where table_name='WISSEN'; - to see all the contraints been imposed.
+
+Add constraints - >
+> alter table table_name add constraint constraint_name PRIMARY KEY (Column_Name);
+Two or more column names within Primary Key mean a composite key.
+
+> alter table table_name add constraint constraint_name NOT NULL (Column_Name);
+
+> alter table table_name add constraint constraint_name Foreign Key (Column_Name) References Table_Name2 (Column_Name2);
+
+> alter table table_name add constraint constraint_name CHECK (condition);
+
+
