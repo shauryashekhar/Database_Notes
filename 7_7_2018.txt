@@ -1,0 +1,19 @@
+> select upper(last_name) from employees where rownum<10;
+
+When column name is passed, dont use quotes for column name.
+
+SQL Processing:-
+1. Parsing (Syntax Error/ Order of statement/ Grammar Statement)
+2. Binding (Looks for variables being used)
+3. Optimizer (Program responsible for generating execution plan) - Mutiple plans are generated and one is chosen on the basis of cost. - collect corresponding information from data dictionary.s
+4. Execution
+5. Fetch
+
+GLOBAL TEMPORARY TABLES <- same SQL syntax
+
+Temporary tables which are not persistent.
+Also they depend on the database connection and not on the connection of the users.
+
+ON COMMIT DELETE ROWS;   <- gets deleted on commit command
+ON COMMIT PRESERVE ROWS; <- is preserved even after commit command
+
